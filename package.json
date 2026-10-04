@@ -1,0 +1,57 @@
+{
+  "name": "vscode-claude-usage-tracker",
+  "displayName": "Claude Usage Tracker",
+  "description": "Shows Claude AI token usage in the status bar — 5h block, weekly totals, and last prompt cost",
+  "version": "0.1.0",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "claude-usage.showDetail",
+        "title": "Claude Usage: Show Detail"
+      },
+      {
+        "command": "claude-usage.refresh",
+        "title": "Claude Usage: Refresh",
+        "icon": "$(refresh)"
+      }
+    ],
+    "menus": {
+      "statusBar/item/context": [
+        {
+          "command": "claude-usage.refresh",
+          "when": "statusBarItemId == 'claude-usage.statusbar'"
+        },
+        {
+          "command": "claude-usage.showDetail",
+          "when": "statusBarItemId == 'claude-usage.statusbar'"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Claude Usage Tracker",
+      "properties": {
+        "claude-usage.tokensPerMinute": {
+          "type": "number",
+          "default": 10000,
+          "description": "Tokens per minute conversion rate (used to display 5h block in minutes and week in hours)"
+        },
+        "claude-usage.refreshIntervalSeconds": {
+          "type": "number",
+          "default": 30,
+          "description": "How often to refresh usage data (seconds)"
+        },
+        "claude-usage.showCost": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show cost in USD instead of time-based units in the status bar"
+        }
+      }
+    }
+  },
+  "scripts": {},
+  "devDependencies": {}
+}
