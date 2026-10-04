@@ -1,12 +1,18 @@
 {
   "name": "vscode-claude-usage-tracker",
   "displayName": "Claude Usage Tracker",
-  "description": "Shows Claude AI token usage in the status bar — 5h block, weekly totals, and last prompt cost",
-  "version": "0.1.0",
+  "description": "Shows Claude Code token usage and API-equivalent cost in the status bar: rolling 5h and 7d windows, last prompt, per-model and per-effort breakdown",
+  "version": "0.2.0",
+  "publisher": "exystorg",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/exystorg/vscode-claude-usage-tracker.git"
+  },
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Other"],
   "activationEvents": ["onStartupFinished"],
-  "main": "./extension.js",
+  "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
@@ -34,24 +40,39 @@
     "configuration": {
       "title": "Claude Usage Tracker",
       "properties": {
-        "claude-usage.tokensPerMinute": {
-          "type": "number",
-          "default": 10000,
-          "description": "Tokens per minute conversion rate (used to display 5h block in minutes and week in hours)"
-        },
         "claude-usage.refreshIntervalSeconds": {
           "type": "number",
           "default": 30,
-          "description": "How often to refresh usage data (seconds)"
+          "minimum": 5,
+          "description": "How often to rescan transcripts (seconds). Only changed files are re-parsed."
         },
-        "claude-usage.showCost": {
-          "type": "boolean",
-          "default": false,
-          "description": "Show cost in USD instead of time-based units in the status bar"
+        "claude-usage.pricing": {
+          "type": "object",
+          "default": {},
+          "markdownDescription": "Per-model prices in USD per million tokens, keyed by model-id prefix (longest prefix wins). Overrides/extends the built-in table, e.g. `{ \"claude-sonnet-5-5\": { \"input\": 3, \"output\": 15 } }`. Cache writes are charged at 1.25x (5m TTL) / 2x (1h TTL) input, cache reads at 0.1x input. These are API list-price equivalents, not subscription billing.",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "input": { "type": "number", "minimum": 0 },
+              "output": { "type": "number", "minimum": 0 }
+            },
+            "required": ["input", "output"]
+          }
         }
       }
     }
   },
-  "scripts": {},
-  "devDependencies": {}
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && node --test test/",
+    "package": "vsce package",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "~1.85.0",
+    "@vscode/vsce": "^3.0.0",
+    "typescript": "^5.4.0"
+  }
 }

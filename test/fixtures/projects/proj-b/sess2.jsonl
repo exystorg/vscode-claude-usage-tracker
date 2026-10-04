@@ -1,0 +1,2 @@
+{"type":"assistant","timestamp":"2026-10-01T10:00:02.000Z","requestId":"req_A","effort":"high","sessionId":"sess2","message":{"id":"msg_A","model":"claude-opus-5-5","usage":{"input_tokens":10,"cache_creation_input_tokens":1000,"cache_read_input_tokens":20000,"output_tokens":100}}}
+{"type":"assistant","timestamp":"2026-10-02T08:00:00.000Z","requestId":"req_D","effort":"high","sessionId":"sess2","message":{"id":"msg_D","model":"claude-fable-5-1","usage":{"input_tokens":0,"cache_creation_input_tokens":0,"cache_read_input_tokens":1000000,"output_tokens":0}}}
